@@ -1,24 +1,24 @@
-#pragma warning
+#pragma once
+#include <Windows.h>
+#include <sstream>
+#include <time.h>
 #include <iostream>
 #include <string>
-#include <sstream>
-#include "GameManager.h"
-#include <Windows.h>
-#include <chrono>
-#include <random>
-#include <thread>
-#include <string>
-#include <sstream>
-using namespace std;
 
 class Item
 {
 private:
 	POINT _pos;
 public:
+	Item();
+	~Item();
 	POINT Postion();
+	int X();
+	int Y();
 	void SetPosition(int valuex, int valuey);
+	void RandomPos();
 	void SetPosition(POINT value);
-	string ToStringItem();
+	void ResetData();
+	std::string ToStringItem();
 };
 
