@@ -84,8 +84,14 @@ void GameManager::ScoreUp(Paddle* player)
 	cout << " ";
 	GoToXY(this->_itemDownSpeed->X(), this->_itemDownSpeed->Y());
 	cout << " ";
+	GoToXY(this->_addScore->X(), this->_addScore->Y());
+	cout << " ";
+	GoToXY(this->_subtracScore->X(), this->_subtracScore->Y());
+	cout << " ";
 	this->_item->ResetData();
 	this->_itemDownSpeed->ResetData();
+	this->_addScore->ResetData();
+	this->_subtracScore->ResetData();
 	DrawItem();
 	DrawScores(); //Vẽ điểm số của 2 bên
 }
@@ -211,6 +217,52 @@ void GameManager::Input()
 		Bot(); //Xử lý bot (Thanh trượt chạy tự động)
 	}
 }
+void GameManager::X2Score(int lastTouch)
+{
+	if (lastTouch == -1)
+	{
+		this->_score1 *= 2;
+	}
+	if (lastTouch == 1)
+	{
+		this->_score2 *= 2;
+	}
+	this->_addScore->SetPosition(0, 0);
+	TextColor(14);
+
+	GoToXY(9, this->_height - 6);
+	cout << " ";
+	GoToXY(9, this->_height - 6);
+	cout << this->_score1;
+
+	GoToXY(this->_width / 2 + 9, this->_height - 6);
+	cout << " ";
+	GoToXY(this->_width / 2 + 9, this->_height - 6);
+	cout << this->_score2;
+}
+void GameManager::XHalfScore(int lastTouch)
+{
+	if (this->lastTouch == -1)
+	{
+		this->_score1 *= 0.5;
+	}
+	if (this->lastTouch == 1)
+	{
+		this->_score2 *= 0.5;
+	}
+	this->_subtracScore->SetPosition(0, 0);
+	TextColor(14);
+
+	GoToXY(9, this->_height - 6);
+	cout << " ";
+	GoToXY(9, this->_height - 6);
+	cout << this->_score1;
+
+	GoToXY(this->_width / 2 + 9, this->_height - 6);
+	cout << " ";
+	GoToXY(this->_width / 2 + 9, this->_height - 6);
+	cout << this->_score2;
+}
 
 //Input: None
 //Output: None
@@ -239,6 +291,7 @@ void GameManager::Logic()
 		{
 			if (bally == player1y + i) //Tọa độ y của quả bóng trùng với 1 vị trí nào đó trên thanh trượt bên trái
 			{
+				this->lastTouch = -1;
 				if (i == 0 || i == 1) //Bóng va chạm ở nửa trên thanh trượt bên trái thì luôn phản xạ về phía phải trên
 				{
 					this->_ball->ChangeDirection(UPRIGHT);
@@ -273,6 +326,7 @@ void GameManager::Logic()
 		{
 			if (bally == player2y + i) //Tọa độ y của quả bóng trùng với 1 vị trí nào đó trên thanh trượt bên phải
 			{
+				this->lastTouch = 1;
 				if (i == 0 || i == 1) //Bóng va chạm ở nửa trên thanh trượt bên phải thì luôn phản xạ về phía trái trên
 				{
 					this->_ball->ChangeDirection(UPLEFT);
@@ -330,10 +384,20 @@ void GameManager::Logic()
 	if (ballx == this->_itemDownSpeed->X() && bally == this->_itemDownSpeed->Y())
 	{
 		this->_ball->ChangeDirection(this->_ball->Direction() == UPRIGHT ? DOWNRIGHT : DOWNLEFT);
+		this->_itemDownSpeed->SetPosition(0,0);
 	}
 	if (ballx == this->_item->X() && bally == this->_item->Y())
 	{
 		this->_ball->SetVelocity(1.5 * this->_ball->Velocity());
+		this->_item->SetPosition(0, 0);
+	}
+	if (ballx == this->_addScore->X() && bally == this->_addScore->Y() && this->lastTouch != 0)
+	{
+		X2Score(this->lastTouch);
+	}
+	if (ballx == this->_subtracScore->X() && bally == this->_subtracScore->Y() && this->lastTouch != 0)
+	{
+		XHalfScore(this->lastTouch);
 	}
 }
 //Input: None

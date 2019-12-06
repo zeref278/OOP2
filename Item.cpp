@@ -26,7 +26,7 @@ void Item::SetPosition(POINT value)
 void Item::ResetData()
 {
 	this->_pos.x = rand() % 103 + 5;
-	this->_pos.y = rand() % 30;
+	this->_pos.y = rand() % 21 + 2;
 }
 
 std::string Item::ToStringItem()
