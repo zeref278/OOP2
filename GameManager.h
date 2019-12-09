@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <sstream>
 #include <conio.h>
@@ -25,7 +26,7 @@ class GameManager
 {
 private:
 	int _width, _height; //Chiều rộng và chiều cao của màn hình console
-	float _score1, _score2; //Điểm của người chơi 1 (Bên trái màn hình) và người chơi 2 (Bên phải màn hình)
+	int _score1, _score2; //Điểm của người chơi 1 (Bên trái màn hình) và người chơi 2 (Bên phải màn hình)
 	char _up1, _down1, _up2, _down2; //Các kí tự trên bàn phím dùng để di chuyển 2 thanh trượt đi lên và đi xuống
 	bool _quit; //Cho biết đã thoát khỏi trò chơi hay chưa
 	bool _isSinglePlayer; //Cho biết có phải chế độ một người chơi (đấu với BOT) hay không
@@ -46,6 +47,8 @@ public: //Định nghĩa các hàm thành viên
 
 	void DrawScreenGame();
 	void NewGame();
+	void LoadGame();
+	void SaveGame();
 	void Instruction();
 	void AboutUs();
 	void PauseGame(HANDLE t);
@@ -54,6 +57,7 @@ public: //Định nghĩa các hàm thành viên
 
 	//Lấy vào tên hợp lệ khi người dùng nhập vào
 	string GetNamePlayer(int x, int y);
+
 	void X2Score(int lastTouch);
 	void XHalfScore(int lastTouch);
 

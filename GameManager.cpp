@@ -40,6 +40,7 @@ GameManager::GameManager(int width, int height)
 	this->_addScore = new Item();
 	this->_subtracScore = new Item();
 
+
 	DrawScreenGame(); //ScreenGame chỉ cần vẽ 1 lần
 	DrawBoard(); //Board chỉ cần vẽ 1 lần
 }
@@ -217,52 +218,6 @@ void GameManager::Input()
 		Bot(); //Xử lý bot (Thanh trượt chạy tự động)
 	}
 }
-void GameManager::X2Score(int lastTouch)
-{
-	if (lastTouch == -1)
-	{
-		this->_score1 *= 2;
-	}
-	if (lastTouch == 1)
-	{
-		this->_score2 *= 2;
-	}
-	this->_addScore->SetPosition(0, 0);
-	TextColor(14);
-
-	GoToXY(9, this->_height - 6);
-	cout << " ";
-	GoToXY(9, this->_height - 6);
-	cout << this->_score1;
-
-	GoToXY(this->_width / 2 + 9, this->_height - 6);
-	cout << " ";
-	GoToXY(this->_width / 2 + 9, this->_height - 6);
-	cout << this->_score2;
-}
-void GameManager::XHalfScore(int lastTouch)
-{
-	if (this->lastTouch == -1)
-	{
-		this->_score1 *= 0.5;
-	}
-	if (this->lastTouch == 1)
-	{
-		this->_score2 *= 0.5;
-	}
-	this->_subtracScore->SetPosition(0, 0);
-	TextColor(14);
-
-	GoToXY(9, this->_height - 6);
-	cout << " ";
-	GoToXY(9, this->_height - 6);
-	cout << this->_score1;
-
-	GoToXY(this->_width / 2 + 9, this->_height - 6);
-	cout << " ";
-	GoToXY(this->_width / 2 + 9, this->_height - 6);
-	cout << this->_score2;
-}
 
 //Input: None
 //Output: None
@@ -384,7 +339,7 @@ void GameManager::Logic()
 	if (ballx == this->_itemDownSpeed->X() && bally == this->_itemDownSpeed->Y())
 	{
 		this->_ball->ChangeDirection(this->_ball->Direction() == UPRIGHT ? DOWNRIGHT : DOWNLEFT);
-		this->_itemDownSpeed->SetPosition(0,0);
+		this->_itemDownSpeed->SetPosition(0, 0);
 	}
 	if (ballx == this->_item->X() && bally == this->_item->Y())
 	{
@@ -457,6 +412,7 @@ void GameManager::Run()
 		t1.join(); //Join thread vào hàm Run
 	}
 }
+
 //Input: None
 //Output: None
 //Chức năng: Vẽ tường rào (Khi bắt đầu chơi)
@@ -523,15 +479,16 @@ void GameManager::DrawBoard()
 
 		//"Score: 0" của người chơi 1 (Bên trái) và người chơi 2 (Bên phải) chỉ cần vẽ 1 lần
 		GoToXY(2, this->_height - 6); //Tới vị trí để vẽ dòng chữ điểm cho người chơi 1 và vẽ
-		cout << "Score: 0";
+		cout << "Score: "<<_score1;
 
 		GoToXY(this->_width / 2 + 2, this->_height - 6); //Tới vị trí để vẽ dòng chữ điểm cho người chơi 2 và vẽ
-		cout << "Score: 0";
+		cout << "Score: "<<_score2;
 
 		//Vẽ 2 thanh trượt lúc mới bắt đầu
 		DrawPaddles("\xDB");
 	}
 }
+
 //Input: None
 //Output: None
 //Chức năng: Vẽ quả bóng
@@ -546,6 +503,7 @@ void GameManager::DrawBall(const char* str)
 	GoToXY(ballx, bally); //Tới vị trí của quả bóng
 	cout << str; //Vẽ kí tự của quả bóng ra màn hình
 }
+
 //Input: None
 //Output: None
 //Chức năng: Vẽ 2 thanh trượt
@@ -617,6 +575,7 @@ void GameManager::DrawItem()
 		cout << "|";
 	}
 }
+
 //Input: None
 //Output: None
 //Chức năng: Xử lý Bot (Thanh trượt chạy tự động)
@@ -842,9 +801,10 @@ void GameManager::DrawScreenGame()
 	TextColor(236);
 	GoToXY(70, 13); printf("%c   NEW GAME    ", 175);
 	TextColor(78);
-	GoToXY(70, 15); printf("   INSTRUCTION  ");
-	GoToXY(70, 17); printf("    ABOUT US    ");
-	GoToXY(70, 19); printf("    QUIT        ");
+	GoToXY(70, 15); printf("     LOAD GAME  ");
+	GoToXY(70, 17); printf("   INSTRUCTION  ");
+	GoToXY(70, 19); printf("    ABOUT US    ");
+	GoToXY(70, 21); printf("    QUIT        ");
 	TextColor(0);
 
 	//Xử lý chọn các thanh lựa chọn.
@@ -872,7 +832,7 @@ void GameManager::DrawScreenGame()
 		}
 
 
-		if (press == DOWNe && toado < 18)
+		if (press == DOWNe && toado < 19)
 		{
 			toado++;
 		}
@@ -887,9 +847,11 @@ void GameManager::DrawScreenGame()
 			TextColor(236);
 			GoToXY(70, 13); printf("%c   NEW GAME    ", 175);
 			TextColor(78);
-			GoToXY(70, 15); printf("   INSTRUCTION  ");
-			GoToXY(70, 17); printf("    ABOUT US    ");
-			GoToXY(70, 19); printf("    QUIT        ");
+			GoToXY(70, 15); printf("     LOAD GAME  ");
+			GoToXY(70, 17); printf("   INSTRUCTION  ");
+			GoToXY(70, 19); printf("    ABOUT US    ");
+			GoToXY(70, 21); printf("    QUIT        ");
+
 			TextColor(0);
 		}
 		if (toado == 16)
@@ -897,34 +859,51 @@ void GameManager::DrawScreenGame()
 			TextColor(78);
 			GoToXY(70, 13); printf("    NEW GAME    ");
 			TextColor(236);
-			GoToXY(70, 15); printf("%c  INSTRUCTION  ", 175);
+			GoToXY(70, 15); printf("%c     LOAD GAME ",175);
 			TextColor(78);
-			GoToXY(70, 17); printf("    ABOUT US    ");
-			GoToXY(70, 19); printf("    QUIT        ");
+			GoToXY(70, 17); printf("   INSTRUCTION  ");
+			GoToXY(70, 19); printf("    ABOUT US    ");
+			GoToXY(70, 21); printf("    QUIT        ");
+
 			TextColor(0);
 		}
 		if (toado == 17)
 		{
 			TextColor(78);
 			GoToXY(70, 13); printf("    NEW GAME    ");
-			GoToXY(70, 15); printf("   INSTRUCTION  ");
+			GoToXY(70, 15); printf("     LOAD GAME  ");
 			TextColor(236);
-			GoToXY(70, 17); printf("%c   ABOUT US    ", 175);
+			GoToXY(70, 17); printf("%c   INSTRUCTION ",175);
 			TextColor(78);
-			GoToXY(70, 19); printf("    QUIT        ");
+			GoToXY(70, 19); printf("    ABOUT US    ");
+			GoToXY(70, 21); printf("    QUIT        ");
 			TextColor(0);
 		}
 		if (toado == 18)
 		{
 			TextColor(78);
 			GoToXY(70, 13); printf("    NEW GAME    ");
-			GoToXY(70, 15); printf("   INSTRUCTION  ");
-			GoToXY(70, 17); printf("    ABOUT US    ");
+			GoToXY(70, 15); printf("     LOAD GAME  ");
+			GoToXY(70, 17); printf("   INSTRUCTION  ");
 			TextColor(236);
-			GoToXY(70, 19); printf("%c   QUIT        ", 175);
+			GoToXY(70, 19); printf("%c    ABOUT US   ",175);
+			TextColor(78);
+			GoToXY(70, 21); printf("   QUIT         ");
+			TextColor(0);
+		}
+		if (toado == 19)
+		{
+			TextColor(78);
+			GoToXY(70, 13); printf("    NEW GAME    ");
+			GoToXY(70, 15); printf("     LOAD GAME  ");
+			GoToXY(70, 17); printf("   INSTRUCTION  ");
+			GoToXY(70, 19); printf("    ABOUT US    ");
+			TextColor(236);
+			GoToXY(70, 21); printf("%c   QUIT        ", 175);
 			TextColor(0);
 		}
 	} while (press != ENTERe);
+
 
 	if (toado == 15)
 	{
@@ -934,12 +913,17 @@ void GameManager::DrawScreenGame()
 	}
 	else if (toado == 16)
 	{
+		LoadGame();
+		return;
+	}
+	else if (toado == 17)
+	{
 
 		//Vào Instruction()
 		Instruction();
 		return;
 	}
-	else if (toado == 17)
+	else if (toado == 18)
 	{
 		AboutUs();
 		return;
@@ -962,6 +946,7 @@ void GameManager::Instruction()
 	GoToXY(70, 15); printf("                ");
 	GoToXY(70, 17); printf("                ");
 	GoToXY(70, 19); printf("                ");
+	GoToXY(70, 21); printf("                ");
 
 	TextColor(199);
 	GoToXY(73, 1);  printf("   INSTRUCTION  ");
@@ -1036,6 +1021,7 @@ void GameManager::AboutUs()
 	GoToXY(70, 15); printf("                ");
 	GoToXY(70, 17); printf("                ");
 	GoToXY(70, 19); printf("                ");
+	GoToXY(70, 21); printf("                ");
 
 
 	TextColor(199);
@@ -1119,6 +1105,54 @@ string GameManager::GetNamePlayer(int x, int y)
 	return name_player;
 }
 
+void GameManager::X2Score(int lastTouch)
+{
+	if (lastTouch == -1)
+	{
+		this->_score1 *= 2;
+	}
+	if (lastTouch == 1)
+	{
+		this->_score2 *= 2;
+	}
+	this->_addScore->SetPosition(0, 0);
+	TextColor(14);
+
+	GoToXY(9, this->_height - 6);
+	cout << " ";
+	GoToXY(9, this->_height - 6);
+	cout << this->_score1;
+
+	GoToXY(this->_width / 2 + 9, this->_height - 6);
+	cout << " ";
+	GoToXY(this->_width / 2 + 9, this->_height - 6);
+	cout << this->_score2;
+}
+
+void GameManager::XHalfScore(int lastTouch)
+{
+	if (this->lastTouch == -1)
+	{
+		this->_score1 *= 0.5;
+	}
+	if (this->lastTouch == 1)
+	{
+		this->_score2 *= 0.5;
+	}
+	this->_subtracScore->SetPosition(0, 0);
+	TextColor(14);
+
+	GoToXY(9, this->_height - 6);
+	cout << " ";
+	GoToXY(9, this->_height - 6);
+	cout << this->_score1;
+
+	GoToXY(this->_width / 2 + 9, this->_height - 6);
+	cout << " ";
+	GoToXY(this->_width / 2 + 9, this->_height - 6);
+	cout << this->_score2;
+}
+
 //Input: None
 //Output: None
 //Chức năng: Hiển thị menu new game cho người chơi chọn những lựa chọn.
@@ -1129,6 +1163,7 @@ void GameManager::NewGame()
 	GoToXY(70, 15); printf("                ");
 	GoToXY(70, 17); printf("                ");
 	GoToXY(70, 19); printf("                ");
+	GoToXY(70, 21); printf("                ");
 
 	TextColor(199);
 	GoToXY(70, 7); printf("    NEW GAME    ");
@@ -1380,6 +1415,145 @@ void GameManager::NewGame()
 	}
 }
 
+//Input: None
+//Output: None
+//Chức năng: Hiển thị menu new game cho người chơi chọn những lựa chọn.
+void GameManager::LoadGame()
+{
+	string filename;
+	int x, y;
+
+	GoToXY(70, 13); printf("                ");
+	GoToXY(70, 15); printf("                ");
+	GoToXY(70, 17); printf("                ");
+	GoToXY(70, 19); printf("                ");
+	GoToXY(70, 21); printf("                ");
+
+	TextColor(199);
+	GoToXY(70, 7); printf("    LOAD GAME    ");
+	TextColor(236);
+	GoToXY(70 - 9, 13); printf("FILE NAME:");
+	getline(cin, filename);
+	filename = filename + ".txt";
+
+	ifstream file;
+	file.open(filename, ios::in);
+	if (!file)
+	{
+		GoToXY(70, 15);
+		cout << "Khong ton tai file nay !" << endl;
+		Sleep(1000);
+		TextColor(0);
+		DrawScreenGame();
+	}
+	else
+	{
+		string line_info;
+		getline(file, line_info);
+		vector<string> tokens;
+
+		string seperator = ",";
+		int startPos = 0;
+	
+		size_t foundPos = line_info.find(seperator, startPos);
+
+		while (foundPos != string::npos)
+		{
+			int count = foundPos - startPos;
+			string token = line_info.substr(startPos, count);
+
+			tokens.push_back(token);
+			startPos = foundPos + seperator.length();
+			foundPos = line_info.find(seperator, startPos);
+		}
+
+		int count = line_info.length() - startPos;
+		string token = line_info.substr(startPos, count);
+		tokens.push_back(token);
+
+		if (tokens[0] == "1")
+		{
+			_isSinglePlayer = true;
+			_difficulty = stoi(tokens[1]);
+
+			_score1 = stoi(tokens[2]);
+			_player1->SetNamePlayer(tokens[3]);
+
+			_score2 = stoi(tokens[4]);
+			_player2->SetNamePlayer(tokens[5]);
+
+			_ball->SetVelocity(stof(tokens[6]));
+
+		}
+		else
+		{
+			_isSinglePlayer = false;
+
+			_score1 = stoi(tokens[2]);
+			_player1->SetNamePlayer(tokens[3]);
+
+			_score2 = stoi(tokens[4]);
+			_player2->SetNamePlayer(tokens[5]);
+
+			_ball->SetVelocity(stof(tokens[6]));
+		}
+
+		GoToXY(70, 15);
+		cout << "Doc thanh cong" << endl;
+		Sleep(1000);
+	}
+
+	TextColor(0);
+	
+	file.close();
+	
+}
+
+//Input: None
+//Output: None
+void GameManager::SaveGame()
+{
+	TextColor(12); GoToXY(this->_width / 2 - 3, this->_height / 2 - 7); printf("SAVE GAME");
+	TextColor(140);
+	GoToXY(this->_width / 2 - 9, this->_height / 2 - 5); printf("File name: ");
+
+	string fileName;
+	getline(cin, fileName);
+	fileName = fileName + ".txt";
+
+	ofstream file;
+	file.open(fileName, ios::out | ios::trunc);
+	GoToXY(this->_width / 2 - 4, this->_height / 2 - 7);
+	if (!file)
+	{
+		GoToXY(this->_width / 2 - 4, this->_height / 2 - 3);
+		cout << "Could not save";
+	}
+	else
+	{
+		GoToXY(this->_width / 2 - 4, this->_height / 2 - 3);
+		if (_isSinglePlayer == true)
+		{
+			file << _isSinglePlayer << "," << _difficulty << ","
+				<< _score1 << "," << _player1->NamePlayer() << ","
+				<< _score2 << "," << _player2->NamePlayer() << ","
+				<< _ball->Velocity()<<endl;
+		}
+		else
+		{
+			file << _isSinglePlayer << "," << "," 
+				<< _score1 << "," << _player1->NamePlayer() << ","
+				<< _score2 << "," << _player2->NamePlayer() << ","
+				<< _ball->Velocity() << endl;
+		}
+
+		cout << "Sucessfully";
+	}
+	file.close();
+	Sleep(1000);
+
+}
+
 //Input: Kí tự trong tên
 //Output: Trả về 1 là đúng, trả về 0 là sai, trả về -1 là phím ENTER
 //Chức năng: Kiểm tra kí tự trong tên có hợp lệ không
@@ -1583,7 +1757,7 @@ void GameManager::PauseGame(HANDLE t)
 	TextColor(236);
 	for (int i = 2; i <= 24; i++)
 	{
-		for (int j = 3; j <= 7; j++)
+		for (int j = 3; j <= 10; j++)
 		{
 			GoToXY(this->_width / 2 - 12 + i, this->_height / 2 - 11 + j);
 			printf("%c", 219);
@@ -1593,7 +1767,7 @@ void GameManager::PauseGame(HANDLE t)
 
 	//In viền bảng pausegame
 	TextColor(206);
-	for (int j = 1; j <= 5; j++)
+	for (int j = 1; j <=8 ; j++)
 	{
 		GoToXY(this->_width / 2 - 12 + 1, this->_height / 2 - 9 + j); printf("%c", 178);
 		GoToXY(this->_width / 2 - 12 + 25, this->_height / 2 - 9 + j); printf("%c", 178);
@@ -1601,7 +1775,7 @@ void GameManager::PauseGame(HANDLE t)
 	for (int i = 1; i <= 25; i++)
 	{
 		GoToXY(this->_width / 2 - 12 + i, this->_height / 2 - 11 + 2); printf("%c", 178);
-		GoToXY(this->_width / 2 - 12 + i, this->_height / 2 - 11 + 8); printf("%c", 178);
+		GoToXY(this->_width / 2 - 12 + i, this->_height / 2 - 11 + 11); printf("%c", 178);
 	}
 	TextColor(0);
 
@@ -1611,6 +1785,8 @@ void GameManager::PauseGame(HANDLE t)
 	GoToXY(this->_width / 2 - 9, this->_height / 2 - 5); printf("%c Resume ", 175);
 	TextColor(140);
 	GoToXY(this->_width / 2 + 3, this->_height / 2 - 5); printf("   Menu  ");
+	TextColor(140);
+	GoToXY(this->_width / 2 - 3, this->_height / 2 - 3); printf("   Save  ");
 	TextColor(0);
 
 	//Xử lý các nút trong bảng pausegame
@@ -1631,6 +1807,14 @@ void GameManager::PauseGame(HANDLE t)
 		{
 			press = ENTERe;
 		}
+		else if (a == 's' || a == 'S')
+		{
+			press = UPe;
+		}
+		else if (a == 'w' || a == 'W')
+		{
+			press = DOWNe;
+		}
 		else
 		{
 			press = NONEe;
@@ -1640,9 +1824,17 @@ void GameManager::PauseGame(HANDLE t)
 		{
 			toado++;
 		}
-		if (press == RIGHTe && toado > 15)
+		if (press == RIGHTe &&  toado > 15)
 		{
 			toado--;
+		}
+		if (press == UPe && toado < 17)
+		{
+			toado = 17;
+		}
+		if (press == DOWNe && toado == 17)
+		{
+			toado = 15;
 		}
 
 		if (toado == 15)
@@ -1651,6 +1843,7 @@ void GameManager::PauseGame(HANDLE t)
 			GoToXY(this->_width / 2 - 9, this->_height / 2 - 5); printf("%c Resume ", 175);
 			TextColor(140);
 			GoToXY(this->_width / 2 + 3, this->_height / 2 - 5); printf("   Menu  ");
+			GoToXY(this->_width / 2 - 3, this->_height / 2 - 3); printf("   Save  ");
 			TextColor(0);
 		}
 		if (toado == 16)
@@ -1659,7 +1852,19 @@ void GameManager::PauseGame(HANDLE t)
 			GoToXY(this->_width / 2 - 9, this->_height / 2 - 5); printf("  Resume ");
 			TextColor(124);
 			GoToXY(this->_width / 2 + 3, this->_height / 2 - 5); printf("%c  Menu  ", 175);
+			TextColor(140);
+			GoToXY(this->_width / 2 - 3, this->_height / 2 - 3); printf("   Save  ");
 			TextColor(0);
+			TextColor(0);
+
+		}
+		if (toado == 17)
+		{
+			TextColor(140);
+			GoToXY(this->_width / 2 - 9, this->_height / 2 - 5); printf("  Resume ");
+			GoToXY(this->_width / 2 + 3, this->_height / 2 - 5); printf("   Menu  ");
+			TextColor(124);
+			GoToXY(this->_width / 2 - 3, this->_height / 2 - 3); printf("%c   Save ",175);
 
 		}
 	} while (press != ENTERe);
@@ -1669,7 +1874,7 @@ void GameManager::PauseGame(HANDLE t)
 		//Xoá board pausegame
 		for (int i = 1; i <= 25; i++)
 		{
-			for (int j = 2; j <= 8; j++)
+			for (int j = 2; j <= 11; j++)
 			{
 				GoToXY(this->_width / 2 - 12 + i, this->_height / 2 - 11 + j);
 				printf(" ");
@@ -1693,6 +1898,32 @@ void GameManager::PauseGame(HANDLE t)
 		DrawScreenGame();
 		DrawBoard();
 		ResumeThread(t);
+		return;
+	}
+	else if (toado == 17)
+	{
+		//In bên trong bảng pausegame
+		TextColor(236);
+		for (int i = 2; i <= 24; i++)
+		{
+			for (int j = 3; j <= 10; j++)
+			{
+				GoToXY(this->_width / 2 - 12 + i, this->_height / 2 - 11 + j);
+				printf("%c", 219);
+			}
+		}
+		SaveGame();
+		TextColor(0);
+		for (int i = 1; i <= 25; i++)
+		{
+			for (int j = 2; j <= 11; j++)
+			{
+				GoToXY(this->_width / 2 - 12 + i, this->_height / 2 - 11 + j);
+				printf(" ");
+			}
+		}
+		ResumeThread(t);
+		DrawBall(" ");
 		return;
 	}
 }
