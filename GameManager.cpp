@@ -40,6 +40,8 @@ GameManager::GameManager(int width, int height)
 	this->_addScore = new Item();
 	this->_subtracScore = new Item();
 
+	fileHistory.open(HISTORY, ios::out|ios::app);
+	fileHistory.close();
 
 	DrawScreenGame(); //ScreenGame chỉ cần vẽ 1 lần
 	DrawBoard(); //Board chỉ cần vẽ 1 lần
@@ -799,12 +801,13 @@ void GameManager::DrawScreenGame()
 
 	//Tạo các thanh lựa chọn đang chở ở NEW GAME
 	TextColor(236);
-	GoToXY(70, 13); printf("%c   NEW GAME    ", 175);
+	GoToXY(70, yNewGame); printf("%c   NEW GAME    ", 175);
 	TextColor(78);
-	GoToXY(70, 15); printf("     LOAD GAME  ");
-	GoToXY(70, 17); printf("   INSTRUCTION  ");
-	GoToXY(70, 19); printf("    ABOUT US    ");
-	GoToXY(70, 21); printf("    QUIT        ");
+	GoToXY(70, yLoadGame); printf("     LOAD GAME  ");
+	GoToXY(70, yHistory); printf("     HISTORY    ");
+	GoToXY(70, yInstruction); printf("   INSTRUCTION  ");
+	GoToXY(70, yAbout); printf("    ABOUT US    ");
+	GoToXY(70, yQuit); printf("    QUIT        ");
 	TextColor(0);
 
 	//Xử lý chọn các thanh lựa chọn.
@@ -832,7 +835,7 @@ void GameManager::DrawScreenGame()
 		}
 
 
-		if (press == DOWNe && toado < 19)
+		if (press == DOWNe && toado < 20)
 		{
 			toado++;
 		}
@@ -845,61 +848,79 @@ void GameManager::DrawScreenGame()
 		{
 
 			TextColor(236);
-			GoToXY(70, 13); printf("%c   NEW GAME    ", 175);
+			GoToXY(70, yNewGame); printf("%c   NEW GAME    ", 175);
 			TextColor(78);
-			GoToXY(70, 15); printf("     LOAD GAME  ");
-			GoToXY(70, 17); printf("   INSTRUCTION  ");
-			GoToXY(70, 19); printf("    ABOUT US    ");
-			GoToXY(70, 21); printf("    QUIT        ");
+			GoToXY(70, yLoadGame); printf("     LOAD GAME  ");
+			GoToXY(70, yHistory); printf("     HISTORY    ");
+			GoToXY(70, yInstruction); printf("   INSTRUCTION  ");
+			GoToXY(70, yAbout); printf("    ABOUT US    ");
+			GoToXY(70, yQuit); printf("    QUIT        ");
 
 			TextColor(0);
 		}
 		if (toado == 16)
 		{
 			TextColor(78);
-			GoToXY(70, 13); printf("    NEW GAME    ");
+			GoToXY(70, yNewGame); printf("    NEW GAME    ");
 			TextColor(236);
-			GoToXY(70, 15); printf("%c     LOAD GAME ",175);
+			GoToXY(70, yLoadGame); printf("%c     LOAD GAME ",175);
 			TextColor(78);
-			GoToXY(70, 17); printf("   INSTRUCTION  ");
-			GoToXY(70, 19); printf("    ABOUT US    ");
-			GoToXY(70, 21); printf("    QUIT        ");
+			GoToXY(70, yHistory); printf("     HISTORY    ");
+			GoToXY(70, yInstruction); printf("   INSTRUCTION  ");
+			GoToXY(70, yAbout); printf("    ABOUT US    ");
+			GoToXY(70, yQuit); printf("    QUIT        ");
 
 			TextColor(0);
 		}
 		if (toado == 17)
 		{
 			TextColor(78);
-			GoToXY(70, 13); printf("    NEW GAME    ");
-			GoToXY(70, 15); printf("     LOAD GAME  ");
+			GoToXY(70, yNewGame); printf("    NEW GAME    ");
+			GoToXY(70, yLoadGame); printf("     LOAD GAME  ");
 			TextColor(236);
-			GoToXY(70, 17); printf("%c   INSTRUCTION ",175);
+			GoToXY(70, yHistory); printf("%c     HISTORY   ",175);
 			TextColor(78);
-			GoToXY(70, 19); printf("    ABOUT US    ");
-			GoToXY(70, 21); printf("    QUIT        ");
+			GoToXY(70, yInstruction); printf("   INSTRUCTION  ");
+			GoToXY(70, yAbout); printf("    ABOUT US    ");
+			GoToXY(70, yQuit); printf("    QUIT        ");
 			TextColor(0);
 		}
 		if (toado == 18)
 		{
 			TextColor(78);
-			GoToXY(70, 13); printf("    NEW GAME    ");
-			GoToXY(70, 15); printf("     LOAD GAME  ");
-			GoToXY(70, 17); printf("   INSTRUCTION  ");
+			GoToXY(70, yNewGame); printf("    NEW GAME    ");
+			GoToXY(70, yLoadGame); printf("     LOAD GAME  ");
+			GoToXY(70, yHistory); printf("     HISTORY    ");
 			TextColor(236);
-			GoToXY(70, 19); printf("%c    ABOUT US   ",175);
+			GoToXY(70, yInstruction); printf("%c   INSTRUCTION ",175);
 			TextColor(78);
-			GoToXY(70, 21); printf("   QUIT         ");
+			GoToXY(70, yAbout); printf("    ABOUT US    ");
+			GoToXY(70, yQuit); printf("    QUIT        ");
 			TextColor(0);
 		}
 		if (toado == 19)
 		{
 			TextColor(78);
-			GoToXY(70, 13); printf("    NEW GAME    ");
-			GoToXY(70, 15); printf("     LOAD GAME  ");
-			GoToXY(70, 17); printf("   INSTRUCTION  ");
-			GoToXY(70, 19); printf("    ABOUT US    ");
+			GoToXY(70, yNewGame); printf("    NEW GAME    ");
+			GoToXY(70, yLoadGame); printf("     LOAD GAME  ");
+			GoToXY(70, yHistory); printf("     HISTORY    ");
+			GoToXY(70, yInstruction); printf("   INSTRUCTION  ");
 			TextColor(236);
-			GoToXY(70, 21); printf("%c   QUIT        ", 175);
+			GoToXY(70, yAbout); printf("%c    ABOUT US   ",175);
+			TextColor(78);
+			GoToXY(70, yQuit); printf("   QUIT         ");
+			TextColor(0);
+		}
+		if (toado == 20)
+		{
+			TextColor(78);
+			GoToXY(70, yNewGame); printf("    NEW GAME    ");
+			GoToXY(70, yLoadGame); printf("     LOAD GAME  ");
+			GoToXY(70, yHistory); printf("     HISTORY    ");
+			GoToXY(70, yInstruction); printf("   INSTRUCTION  ");
+			GoToXY(70, yAbout); printf("    ABOUT US    ");
+			TextColor(236);
+			GoToXY(70, yQuit); printf("%c   QUIT        ", 175);
 			TextColor(0);
 		}
 	} while (press != ENTERe);
@@ -918,12 +939,16 @@ void GameManager::DrawScreenGame()
 	}
 	else if (toado == 17)
 	{
+		GameHistory();
+	}
+	else if (toado == 18)
+	{
 
 		//Vào Instruction()
 		Instruction();
 		return;
 	}
-	else if (toado == 18)
+	else if (toado == 19)
 	{
 		AboutUs();
 		return;
@@ -942,11 +967,12 @@ void GameManager::DrawScreenGame()
 //Chức năng: Hiển thị thông tin cách chơi, các phím chức năng của trò chơi.
 void GameManager::Instruction()
 {
-	GoToXY(70, 13); printf("                ");
-	GoToXY(70, 15); printf("                ");
-	GoToXY(70, 17); printf("                ");
-	GoToXY(70, 19); printf("                ");
-	GoToXY(70, 21); printf("                ");
+	GoToXY(70, yNewGame); printf("                ");
+	GoToXY(70, yLoadGame); printf("                ");
+	GoToXY(70, yHistory); printf("                ");
+	GoToXY(70, yInstruction); printf("                ");
+	GoToXY(70, yAbout); printf("                ");
+	GoToXY(70, yQuit); printf("                ");
 
 	TextColor(199);
 	GoToXY(73, 1);  printf("   INSTRUCTION  ");
@@ -1017,11 +1043,12 @@ void GameManager::Instruction()
 void GameManager::AboutUs()
 {
 
-	GoToXY(70, 13); printf("                ");
-	GoToXY(70, 15); printf("                ");
-	GoToXY(70, 17); printf("                ");
-	GoToXY(70, 19); printf("                ");
-	GoToXY(70, 21); printf("                ");
+	GoToXY(70, yNewGame); printf("                ");
+	GoToXY(70, yLoadGame); printf("                ");
+	GoToXY(70, yHistory); printf("                ");
+	GoToXY(70, yInstruction); printf("                ");
+	GoToXY(70, yAbout); printf("                ");
+	GoToXY(70, yQuit); printf("                ");
 
 
 	TextColor(199);
@@ -1159,11 +1186,12 @@ void GameManager::XHalfScore(int lastTouch)
 void GameManager::NewGame()
 {
 	//Xoá các thanh lựa chọn để vẽ các thanh lựa chọn trong chế độ new game.
-	GoToXY(70, 13); printf("                ");
-	GoToXY(70, 15); printf("                ");
-	GoToXY(70, 17); printf("                ");
-	GoToXY(70, 19); printf("                ");
-	GoToXY(70, 21); printf("                ");
+	GoToXY(70, yNewGame); printf("                ");
+	GoToXY(70, yLoadGame); printf("                ");
+	GoToXY(70, yHistory); printf("                ");
+	GoToXY(70, yInstruction); printf("                ");
+	GoToXY(70, yAbout); printf("                ");
+	GoToXY(70, yQuit); printf("                ");
 
 	TextColor(199);
 	GoToXY(70, 7); printf("    NEW GAME    ");
@@ -1420,14 +1448,16 @@ void GameManager::NewGame()
 //Chức năng: Hiển thị menu new game cho người chơi chọn những lựa chọn.
 void GameManager::LoadGame()
 {
+	//Đọc các dữ liệu từ file đã lưu
 	string filename;
 	int x, y;
 
-	GoToXY(70, 13); printf("                ");
-	GoToXY(70, 15); printf("                ");
-	GoToXY(70, 17); printf("                ");
-	GoToXY(70, 19); printf("                ");
-	GoToXY(70, 21); printf("                ");
+	GoToXY(70, yNewGame); printf("                ");
+	GoToXY(70, yLoadGame); printf("                ");
+	GoToXY(70, yHistory); printf("                ");
+	GoToXY(70, yInstruction); printf("                ");
+	GoToXY(70, yAbout); printf("                ");
+	GoToXY(70, yQuit); printf("                ");
 
 	TextColor(199);
 	GoToXY(70, 7); printf("    LOAD GAME    ");
@@ -1448,6 +1478,7 @@ void GameManager::LoadGame()
 	}
 	else
 	{
+		//Cắt chuỗi trong file thành các thành phần dữ liệu
 		string line_info;
 		getline(file, line_info);
 		vector<string> tokens;
@@ -1582,6 +1613,9 @@ void GameManager::EndGame(HANDLE t)
 {
 	//Dừng thread để xử lý cái đã.
 	SuspendThread(t);
+
+	//Lưu kết quả vừa chơi
+	WriteFileHistory();
 
 	//In thêm một lần để tránh trường hợp xấu xảy ra
 	DrawBall("O");
@@ -1741,6 +1775,89 @@ void GameManager::EndGame(HANDLE t)
 	}
 }
 
+void GameManager::GameHistory()
+{
+
+	GoToXY(70, yNewGame); printf("                ");
+	GoToXY(70, yLoadGame); printf("                ");
+	GoToXY(70, yHistory); printf("                ");
+	GoToXY(70, yInstruction); printf("                ");
+	GoToXY(70, yAbout); printf("                ");
+	GoToXY(70, yQuit); printf("                ");
+	TextColor(199);
+	GoToXY(73, 5); printf("    HISTORY    ");
+	GoToXY(73 - 9, 7); printf("/*Press anykey to return to menu game*/");
+	fileHistory.open(HISTORY, ios::in);
+
+	int countLine = 0;
+	int x=70;
+	int y = 9;
+	if (!fileHistory)
+	{
+		GoToXY(x, y);
+		cout << "Khong the mo file";
+	}
+	else
+	{
+		while (!fileHistory.eof())
+		{
+			string line;
+			getline(fileHistory, line);
+			if (line != "")
+			{
+				TextColor(78);
+				GoToXY(x, y);
+				y += 2;
+				cout << line;
+				countLine++;
+			}
+			if (countLine == 8)
+			{
+				GoToXY(x, y);
+				TextColor(78);
+				cout << "History da day, xoa History cu";
+				fileHistory.close();
+				fileHistory.open(HISTORY, ios::out);
+				fileHistory.close();
+				countLine = 0;
+			}
+		}
+	}
+	fileHistory.close();
+	TextColor(0);
+	char a = NULL;
+	do
+	{
+		a = _getch();
+		if (a != NULL)
+		{
+			DrawScreenGame();
+			break;
+		}
+	} while (1);
+	
+}
+
+void GameManager::WriteFileHistory()
+{
+	fileHistory.open(HISTORY, ios::out | ios::app);
+	string line1 = _player1->NamePlayer() + ":";
+	string line2 = _player2->NamePlayer() + ":";
+	if (this->_score1 > this->_score2)
+	{
+		fileHistory << line1 << _score1 << " has won " << line2 << _score2 << endl;
+	}
+	else if (this->_score2 > this->_score1 > this->_score2)
+	{
+		fileHistory << line2 << _score2 << " has won " << line1 << _score1 << endl;
+	}
+	else
+	{
+		fileHistory << line1 << _score1 << " and " << line2 << _score2 << " are even" << endl;
+	}
+	fileHistory.close();
+}
+
 //Input: Handle của thread (Kiểu HANDLE)
 //Output: None
 //Chức năng: Xử lý tạm dừng (pause) game
@@ -1889,6 +2006,7 @@ void GameManager::PauseGame(HANDLE t)
 	else if (toado == 16)
 	{
 		//Về menu chính
+		WriteFileHistory();
 		this->_score1 = 0;
 		this->_score2 = 0;
 		this->_ball->RandomPos(this->_height - 8);
@@ -1902,6 +2020,7 @@ void GameManager::PauseGame(HANDLE t)
 	}
 	else if (toado == 17)
 	{
+		//Lưu game
 		//In bên trong bảng pausegame
 		TextColor(236);
 		for (int i = 2; i <= 24; i++)

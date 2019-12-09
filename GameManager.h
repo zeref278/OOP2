@@ -13,6 +13,7 @@
 #include "Ball.h"
 #include "Item.h"
 #include "Paddle.h"
+#include "GameConstant.h"
 using namespace std;
 
 #define HEIGHTSCREEN 600 //Chiều cao của màn hình console theo pixel
@@ -40,17 +41,24 @@ private:
 	Item* _subtracScore;
 	int lastTouch = 0;
 
+	fstream fileHistory;
+
 public: // Định nghĩa hàm tạo và hàm huỷ
 	GameManager(int, int);
 	~GameManager();
 public: //Định nghĩa các hàm thành viên
 
 	void DrawScreenGame();
+
 	void NewGame();
 	void LoadGame();
 	void SaveGame();
+
 	void Instruction();
 	void AboutUs();
+
+	void GameHistory();
+	void WriteFileHistory();
 	void PauseGame(HANDLE t);
 	void QuitGame();
 	void EndGame(HANDLE t);
