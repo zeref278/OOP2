@@ -6,9 +6,10 @@
 #include <chrono>
 #include <random>
 #include <thread>
+#include "GameConstant.h"
 using namespace std;
 
-enum eDir { STOP = 0, UPLEFT = 1, DOWNLEFT = 2, UPRIGHT = 3, DOWNRIGHT = 4 }; //Các hướng bay của quả bóng
+
 
 class Ball
 {

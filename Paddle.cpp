@@ -48,6 +48,7 @@ Paddle::Paddle()
 	this->_pos.x = 0;
 	this->_pos.y = 0;
 	this->_length = 5;
+	this->_direction = PaddleSTOP;
 }
 
 //Input: Vị trí trên cùng của thanh trượt cần được khởi tạo (pos có kiểu POINT với 2 thành phần là pos.x và pos.y)
@@ -61,6 +62,7 @@ Paddle::Paddle(POINT pos)
 	this->_originalPos = pos;
 	this->_pos = pos;
 	this->_length = 5;
+	this->_direction = PaddleSTOP;
 }
 
 //Input: None
@@ -69,6 +71,7 @@ Paddle::Paddle(POINT pos)
 void Paddle::ResetData()
 {
 	this->_pos = this->_originalPos;
+	this->_direction = PaddleSTOP;
 }
 
 //Input: None
@@ -77,6 +80,7 @@ void Paddle::ResetData()
 void Paddle::MoveUp()
 {
 	this->_pos.y--;
+	_direction = PaddleUP;
 }
 
 //Input: None
@@ -85,6 +89,7 @@ void Paddle::MoveUp()
 void Paddle::MoveDown()
 {
 	this->_pos.y++;
+	_direction = PaddleDOWN;
 }
 
 //Input: None

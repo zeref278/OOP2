@@ -16,11 +16,7 @@
 #include "GameConstant.h"
 using namespace std;
 
-#define HEIGHTSCREEN 600 //Chiều cao của màn hình console theo pixel
-#define WIDTHSCREEN 900 //Chiều rộng của màn hình console theo pixel
-#define HEIGHTCHAR 35 //Chiều cao của màn hình console theo kí tự
-#define WIDTHCHAR 108 //Chiều rộng của màn hình console theo kí tự
-enum CONTROLMENU { NONEe, UPe, DOWNe, LEFTe, RIGHTe, ENTERe }; //Các phím bấm để di chuyển, chọn option trong menu
+
 
 
 class GameManager

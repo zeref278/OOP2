@@ -4,6 +4,7 @@
 #include <sstream>
 #include <Windows.h>
 #include <thread>
+#include "GameConstant.h"
 using namespace std;
 
 class Paddle
@@ -13,7 +14,7 @@ private:
 	int _length; //Chiều dài của thanh trượt
 	POINT _originalPos; //Vị trí trên cùng của thanh trượt lúc mới khởi tạo thanh trượt
 	string _namePlayer; //Tên của người chơi điều khiển thanh trượt
-
+	eDirPadd _direction; //Hướng của thanh trượt
 public:
 	int X();
 	int Y();
@@ -28,4 +29,7 @@ public:
 	void MoveUp();
 	void MoveDown();
 	string ToString();
+public:
+	eDirPadd Direction() { return this->_direction; };
+	void ChangeDirection(eDirPadd newDic) { this->_direction = newDic; };
 };

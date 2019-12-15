@@ -163,6 +163,12 @@ void Ball::Move()
 		this->_pos.x++; //Tăng tọa độ x lên 1 đơn vị để di chuyển quả bóng đi qua phải (trên màn hình console)
 		this->_pos.y++; //Tăng tọa độ y lên 1 đơn vị để di chuyển quả bóng đi xuống (trên màn hình console)
 		break;
+	case LEFT:
+		this->_pos.x--;
+		break;
+	case RIGHT:
+		this->_pos.x++;
+		break;
 	default: //Không phải các hướng bay trên thì không cần di chuyển
 		break;
 	}

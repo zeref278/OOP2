@@ -145,6 +145,8 @@ void GameManager::Input()
 
 				this->_player1->MoveUp(); //Di chuyển thanh trượt bên trái đi lên
 
+				this->_player1->ChangeDirection(PaddleUP);
+
 				player1y--; //Giảm player1y xuống 1 đơn vị (Cùng với tọa độ y của _player1 đã giảm ở trên) để tránh bị lỗi
 
 				GoToXY(player1x, player1y); cout << "\xDB"; //Vẽ thêm 1 kí tự ở trên cùng của thanh trượt bên trái
@@ -152,7 +154,7 @@ void GameManager::Input()
 		}
 		//Cần check GetAsyncKeyState và 0x8000 (Most significant bit) vì ta cần kiểm tra khi phím được bấm ngay tại thời điểm này
 		//Bỏ qua trường hợp đã bấm khi gọi hàm này trước đó (Least significant bit)
-		if (GetAsyncKeyState(this->_down1) & 0x8000) //Khi người chơi bên trái bấm phím 'S' (Di chuyển thanh trượt bên trái đi xuống)
+		else if (GetAsyncKeyState(this->_down1) & 0x8000) //Khi người chơi bên trái bấm phím 'S' (Di chuyển thanh trượt bên trái đi xuống)
 		{
 			//Vị trí của thanh trượt khi di chuyển đi xuống phải nằm trên tường rào ở phía dưới thì mới di chuyển đi xuống được
 			if (player1y + length < this->_height - 8)
@@ -163,11 +165,18 @@ void GameManager::Input()
 
 				this->_player1->MoveDown(); //Di chuyển thanh trượt bên trái đi xuống
 
+				this->_player1->ChangeDirection(PaddleDOWN);
+
 				player1y++; //Tăng player1y lên 1 đơn vị (Cùng với tọa độ y của _player1 đã tăng ở trên) để tránh bị lỗi
 
 				GoToXY(player1x, player1y + length - 1); cout << "\xDB"; //Vẽ thêm 1 kí tự ở dưới cùng của thanh trượt bên trái
 			}
 		}
+		else 
+		{
+			this->_player1->ChangeDirection(PaddleSTOP);
+		}
+
 		if (this->_isSinglePlayer == false) //Nếu không phải chế độ SinglePlayer
 		{
 			//Cần check GetAsyncKeyState và 0x8000 (Most significant bit) vì ta cần kiểm tra khi phím được bấm ngay tại thời điểm này
@@ -183,6 +192,8 @@ void GameManager::Input()
 
 					this->_player2->MoveUp(); //Di chuyển thanh trượt bên phải đi lên
 
+					this->_player2->ChangeDirection(PaddleUP);
+
 					player2y--; //Giảm player2y xuống 1 đơn vị (Cùng với tọa độ y của _player2 đã giảm ở trên) để tránh bị lỗi
 
 					GoToXY(player2x, player2y); cout << "\xDB"; //Vẽ thêm 1 kí tự ở trên cùng của thanh trượt bên phải
@@ -190,7 +201,7 @@ void GameManager::Input()
 			}
 			//Cần check GetAsyncKeyState và 0x8000 (Most significant bit) vì ta cần kiểm tra khi phím được bấm ngay tại thời điểm này
 			//Bỏ qua trường hợp đã bấm khi gọi hàm này trước đó (Least significant bit)
-			if (GetAsyncKeyState(this->_down2) & 0x8000) //Khi người chơi bên phải bấm phím Down Arrow (Di chuyển thanh trượt bên phải đi xuống)
+			else if (GetAsyncKeyState(this->_down2) & 0x8000) //Khi người chơi bên phải bấm phím Down Arrow (Di chuyển thanh trượt bên phải đi xuống)
 			{
 				// Vị trí của thanh trượt khi di chuyển đi xuống phải nằm trên tường rào ở phía dưới thì mới di chuyển đi xuống được
 				if (player2y + length < this->_height - 8)
@@ -201,10 +212,16 @@ void GameManager::Input()
 
 					this->_player2->MoveDown(); //Di chuyển thanh trượt bên phải đi xuống
 
+					this->_player2->ChangeDirection(PaddleDOWN);
+
 					player2y++; //Tăng player2y lên 1 đơn vị (Cùng với tọa độ y của _player2 đã tăng ở trên) để tránh bị lỗi
 
 					GoToXY(player2x, player2y + length - 1); cout << "\xDB"; //Vẽ thêm 1 kí tự ở dưới cùng của thanh trượt bên phải
 				}
+			}
+			else
+			{
+				this->_player2->ChangeDirection(PaddleSTOP);
 			}
 		}
 		//Cần check GetAsyncKeyState và 0x8000 (Most significant bit) vì ta cần kiểm tra khi phím được bấm ngay tại thời điểm này
@@ -212,6 +229,14 @@ void GameManager::Input()
 		if (GetAsyncKeyState('Q') & 0x8000) //Khi người chơi bấm phím 'Q'
 		{
 			this->_quit = true; //Kết thúc trò chơi
+		}
+	}
+	else
+	{
+		_player1->ChangeDirection(PaddleSTOP);
+		if (!_isSinglePlayer)
+		{
+			_player2->ChangeDirection(PaddleSTOP);
 		}
 	}
 
@@ -249,26 +274,58 @@ void GameManager::Logic()
 			if (bally == player1y + i) //Tọa độ y của quả bóng trùng với 1 vị trí nào đó trên thanh trượt bên trái
 			{
 				this->lastTouch = -1;
-				if (i == 0 || i == 1) //Bóng va chạm ở nửa trên thanh trượt bên trái thì luôn phản xạ về phía phải trên
-				{
-					this->_ball->ChangeDirection(UPRIGHT);
-				}
-				else if (i == 2) //Bóng va chạm ở chính giữa thanh trượt bên trái
-				{
-					if (this->_ball->Direction() == DOWNLEFT) //Bóng va chạm theo hướng trái dưới
-					{
-						this->_ball->ChangeDirection(DOWNRIGHT); //Phản xạ theo hướng phải dưới
-					}
-					else if (this->_ball->Direction() == UPLEFT) //Bóng va chạm theo hướng trái trên
-					{
-						this->_ball->ChangeDirection(UPRIGHT); //Phản xạ theo hướng phải trên
-					}
-				}
-				else if (i == 3 || i == 4) //Bóng va chạm ở nửa dưới thanh trượt bên trái thì luôn phản xạ về phía phải dưới
-				{
-					this->_ball->ChangeDirection(DOWNRIGHT);
-				}
+				//if (i == 0 || i == 1) //Bóng va chạm ở nửa trên thanh trượt bên trái thì luôn phản xạ về phía phải trên
+				//{
+				//	this->_ball->ChangeDirection(UPRIGHT);
+				//}
+				//else if (i == 2) //Bóng va chạm ở chính giữa thanh trượt bên trái
+				//{
+				//	if (this->_ball->Direction() == DOWNLEFT) //Bóng va chạm theo hướng trái dưới
+				//	{
+				//		this->_ball->ChangeDirection(DOWNRIGHT); //Phản xạ theo hướng phải dưới
+				//	}
+				//	else if (this->_ball->Direction() == UPLEFT) //Bóng va chạm theo hướng trái trên
+				//	{
+				//		this->_ball->ChangeDirection(UPRIGHT); //Phản xạ theo hướng phải trên
+				//	}
+				//}
+				//else if (i == 3 || i == 4) //Bóng va chạm ở nửa dưới thanh trượt bên trái thì luôn phản xạ về phía phải dưới
+				//{
+				//	this->_ball->ChangeDirection(DOWNRIGHT);
+				//}
 
+				if (this->_ball->Direction() == UPLEFT)
+				{
+					if (this->_player1->Direction() == PaddleDOWN)
+					{
+						this->_ball->ChangeDirection(RIGHT);
+					}
+					else this->_ball->ChangeDirection(UPRIGHT);
+				}
+				if (this->_ball->Direction() == DOWNLEFT)
+				{
+					if (this->_player1->Direction() == PaddleUP)
+					{
+						this->_ball->ChangeDirection(RIGHT);
+					}
+					
+					else this->_ball->ChangeDirection(DOWNRIGHT);
+				}
+				if (this->_ball->Direction() == LEFT)
+				{
+					if (this->_player1->Direction() == PaddleDOWN)
+					{
+						this->_ball->ChangeDirection(DOWNRIGHT);
+					}
+					else if (this->_player1->Direction() == PaddleUP)
+					{
+						this->_ball->ChangeDirection(UPRIGHT);
+					}
+					else if (this->_player1->Direction() == PaddleSTOP)
+					{
+						this->_ball->ChangeDirection(RIGHT);
+					}
+				}
 				float velocity = this->_ball->Velocity(); //Lấy vận tốc của quả bóng
 				velocity += 0.1 * velocity; //Vận tốc của quả bóng tăng lên 10% sau khi va chạm vào thanh trượt
 				this->_ball->SetVelocity(velocity); //Đặt lại vận tốc của quả bóng
@@ -284,26 +341,59 @@ void GameManager::Logic()
 			if (bally == player2y + i) //Tọa độ y của quả bóng trùng với 1 vị trí nào đó trên thanh trượt bên phải
 			{
 				this->lastTouch = 1;
-				if (i == 0 || i == 1) //Bóng va chạm ở nửa trên thanh trượt bên phải thì luôn phản xạ về phía trái trên
-				{
-					this->_ball->ChangeDirection(UPLEFT);
-				}
-				else if (i == 2) //Bóng va chạm ở chính giữa thanh trượt bên phải
-				{
-					if (this->_ball->Direction() == DOWNRIGHT) //Bóng va chạm theo hướng phải dưới
-					{
-						this->_ball->ChangeDirection(DOWNLEFT); //Phản xạ theo hướng trái dưới
-					}
-					else if (this->_ball->Direction() == UPRIGHT) //Bóng va chạm theo hướng phải trên
-					{
-						this->_ball->ChangeDirection(UPLEFT); //Phản xạ theo hướng trái trên
-					}
-				}
-				else if (i == 3 || i == 4) //Bóng va chạm ở nửa dưới thanh trượt bên phải thì luôn phản xạ về phía trái dưới
-				{
-					this->_ball->ChangeDirection(DOWNLEFT);
-				}
+				//if (i == 0 || i == 1) //Bóng va chạm ở nửa trên thanh trượt bên phải thì luôn phản xạ về phía trái trên
+				//{
+				//	this->_ball->ChangeDirection(UPLEFT);
+				//}
+				//else if (i == 2) //Bóng va chạm ở chính giữa thanh trượt bên phải
+				//{
+				//	if (this->_ball->Direction() == DOWNRIGHT) //Bóng va chạm theo hướng phải dưới
+				//	{
+				//		this->_ball->ChangeDirection(DOWNLEFT); //Phản xạ theo hướng trái dưới
+				//	}
+				//	else if (this->_ball->Direction() == UPRIGHT) //Bóng va chạm theo hướng phải trên
+				//	{
+				//		this->_ball->ChangeDirection(UPLEFT); //Phản xạ theo hướng trái trên
+				//	}
+				//}
+				//else if (i == 3 || i == 4) //Bóng va chạm ở nửa dưới thanh trượt bên phải thì luôn phản xạ về phía trái dưới
+				//{
+				//	this->_ball->ChangeDirection(DOWNLEFT);
+				//}
+				
 
+				if (this->_ball->Direction() == UPRIGHT)
+				{
+					if (this->_player2->Direction() == PaddleDOWN)
+					{
+						this->_ball->ChangeDirection(LEFT);
+					}
+					else this->_ball->ChangeDirection(UPLEFT);
+				}
+				if (this->_ball->Direction() == DOWNRIGHT)
+				{
+					if (this->_player2->Direction() == PaddleUP)
+					{
+						this->_ball->ChangeDirection(LEFT);
+					}
+
+					else this->_ball->ChangeDirection(DOWNLEFT);
+				}
+				if (this->_ball->Direction() == RIGHT)
+				{
+					if (this->_player2->Direction() == PaddleDOWN)
+					{
+						this->_ball->ChangeDirection(DOWNLEFT);
+					}
+					else if (this->_player2->Direction() == PaddleUP)
+					{
+						this->_ball->ChangeDirection(UPLEFT);
+					}
+					else if (this->_player2->Direction() == PaddleSTOP)
+					{
+						this->_ball->ChangeDirection(LEFT);
+					}
+				}
 				float velocity = this->_ball->Velocity(); //Lấy vận tốc của quả bóng
 				velocity += 0.1 * velocity; //Vận tốc của quả bóng tăng lên 10% sau khi va chạm vào thanh trượt
 				this->_ball->SetVelocity(velocity); //Đặt lại vận tốc của quả bóng
@@ -940,6 +1030,7 @@ void GameManager::DrawScreenGame()
 	else if (toado == 17)
 	{
 		GameHistory();
+		return;
 	}
 	else if (toado == 18)
 	{
